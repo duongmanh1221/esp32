@@ -11,7 +11,6 @@
 
 #include "C:/Users/admin/eclipse-workspace/tcp/New_LIB/dht11.h"
 
-#include <stdio.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
@@ -22,11 +21,7 @@
 #include "esp_netif.h"
 #include "protocol_examples_common.h"
 #include "cJSON.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 #include "freertos/semphr.h"
-#include "freertos/queue.h"
-
 #include "lwip/sockets.h"
 #include "lwip/dns.h"
 #include "lwip/netdb.h"
@@ -51,7 +46,6 @@ float tem,hum;
 #define BTN_DHT 15
 typedef enum {an0,an1,an2,ang} bt_state;
 bt_state a=an0;
-char b[9]="000000";
 uint64_t t;
 static struct dht11_reading dht,last_dht;
 #define BUF_SIZE (1024)
@@ -140,7 +134,7 @@ void JSON_Analyze(const cJSON * const root) {
 
 void handle_button()
 {
-		//doc trang thai nut nhan
+
 	current_status = gpio_get_level(BTN_GPIO);
 
 	switch(button_state)
@@ -158,15 +152,15 @@ void handle_button()
 		{
 			if(esp_timer_get_time()/1000 - time_debounce>= 20)
 			{
-				if(current_status ==0 && last_status ==1)//nhan xuong
+				if(current_status ==0 && last_status ==1)
 				{
-					//button_pressing_callback();
+
 					t_long_press = esp_timer_get_time()/1000;
-					//last_status = current_status;
+
 					last_status = 0;
 					button_state = BUTTON_WAIT_RELEASE_AND_CHECK_LONG_PRESS;
 				}
-				else if(current_status ==1 && last_status ==0)//nha ra
+				else if(current_status ==1 && last_status ==0)
 				{
 					t_long_press = esp_timer_get_time()/1000 - t_long_press;
 					if(t_long_press <= 1000)
@@ -177,7 +171,7 @@ void handle_button()
 					last_status = current_status;
 					button_state = BUTTON_READ;
 				}
-				else //khong dung
+				else
 				{
 					last_status = 1;
 					button_state = BUTTON_READ;
@@ -189,7 +183,7 @@ void handle_button()
 		{
 				if(current_status == 1 && last_status == 0)
 				{
-					//truoc 3s dã nha phim
+
 					button_state = BUTTON_WAIT_DEBOUND;
 					time_debounce = esp_timer_get_time()/1000;
 				}
@@ -243,8 +237,6 @@ void blink(){
 static void echo_task(void *arg)
 {
 	DHT11_init(4);
-    /* Configure parameters of an UART driver,
-     * communication pins and install the driver */
     uart_config_t uart_config = {
         .baud_rate = ECHO_UART_BAUD_RATE,
         .data_bits = UART_DATA_8_BITS,
@@ -262,8 +254,6 @@ static void echo_task(void *arg)
     ESP_ERROR_CHECK(uart_driver_install(ECHO_UART_PORT_NUM, BUF_SIZE * 2, 0, 0, NULL, intr_alloc_flags));
     ESP_ERROR_CHECK(uart_param_config(ECHO_UART_PORT_NUM, &uart_config));
     ESP_ERROR_CHECK(uart_set_pin(ECHO_UART_PORT_NUM, ECHO_TEST_TXD, ECHO_TEST_RXD, ECHO_TEST_RTS, ECHO_TEST_CTS));
-
-    // Configure a temporary buffer for the incoming data
     uint8_t *data = (uint8_t *) malloc(BUF_SIZE);
 
 char s[12];
@@ -276,7 +266,7 @@ char s[12];
 
     	if(a==an1&&tem>=30){sprintf(s,"t = %.1f ", tem);uart_write_bytes(ECHO_UART_PORT_NUM, s, 17),a=an0;nhayled5();a=an0;};
     	if(a==an2&&hum>30){sprintf(s,"h = %.1f ", hum);uart_write_bytes(ECHO_UART_PORT_NUM, s, 17),a=an0;nhayled10();};
-    	if(a==ang&&hum>30&&tem>30){sprintf(s,"tem hum cao");uart_write_bytes(ECHO_UART_PORT_NUM, s, 17),a=an0;};
+    	if(a==ang&&hum>30&&tem>30){sprintf(s,"tem hum cao");uart_write_bytes(ECHO_UART_PORT_NUM, s, 17),a=an0;blink();};
 
         // Write data back to the UART
        //uart_write_bytes(ECHO_UART_PORT_NUM, b, 10);
@@ -487,11 +477,6 @@ void app_main()
   // xTaskCreate(&blink_task, "blink_task", 512, NULL, 5, NULL);
     mqtt_app_start();
     while(1){
-
-
-
-
-nhayled5();
 
 
     }
