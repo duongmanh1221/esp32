@@ -1,0 +1,7 @@
+source "D:/ESP-IDF/esp-idf-v4.4.1/components/app_update/Kconfig.projbuild"
+source "D:/ESP-IDF/esp-idf-v4.4.1/components/bootloader/Kconfig.projbuild"
+source "D:/ESP-IDF/esp-idf-v4.4.1/components/esp_rom/Kconfig.projbuild"
+source "D:/ESP-IDF/esp-idf-v4.4.1/components/esptool_py/Kconfig.projbuild"
+source "D:/ESP-IDF/esp-idf-v4.4.1/components/partition_table/Kconfig.projbuild"
+source "C:/Users/admin/eclipse-workspace/tcp/main/Kconfig.projbuild"
+source "D:/ESP-IDF/esp-idf-v4.4.1/examples/common_components/protocol_examples_common/Kconfig.projbuild"
